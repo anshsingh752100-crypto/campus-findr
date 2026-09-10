@@ -24,7 +24,11 @@ from models import Item, CATEGORIES
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 IS_VERCEL = os.environ.get("VERCEL", False)
 
-app = Flask(__name__)
+app = Flask(
+    __name__,
+    template_folder=os.path.join(BASE_DIR, "templates"),
+    static_folder=os.path.join(BASE_DIR, "static"),
+)
 app.config["SECRET_KEY"] = os.environ.get("SECRET_KEY", "campus-findr-dev-secret-key")
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
 
@@ -52,6 +56,19 @@ os.makedirs(app.config["UPLOAD_FOLDER"], exist_ok=True)
 @app.context_processor
 def inject_categories():
     return dict(categories=CATEGORIES)
+
+
+# ---------------------------------------------------------------------------
+# Vercel: ensure DB exists on every cold start (ephemeral /tmp)
+# ---------------------------------------------------------------------------
+if IS_VERCEL:
+    @app.before_request
+    def ensure_db():
+        """Create tables + seed data if DB doesn't exist yet (Vercel cold start)."""
+        import os as _os
+        if not _os.path.exists("/tmp/campus_findr.db"):
+            init_db(app)
+            seed_db(app)
 
 
 # ---------------------------------------------------------------------------
@@ -275,8 +292,11 @@ def api_items():
 # ---------------------------------------------------------------------------
 
 # Auto-init DB + seed (works both locally and on Vercel import)
-init_db(app)
-seed_db(app)
+try:
+    init_db(app)
+    seed_db(app)
+except Exception:
+    pass  # DB init may fail during Vercel build phase — that's OK
 
 if __name__ == "__main__":
     import socket
