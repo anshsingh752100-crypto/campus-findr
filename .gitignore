@@ -1,0 +1,21 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+venv/
+.env
+
+# SQLite database (auto-generated)
+*.db
+
+# Uploaded files (user content)
+static/uploads/*
+!static/uploads/.gitkeep
+
+# IDE / OS
+.vscode/
+.idea/
+*.swp
+Thumbs.db
+.DS_Store

@@ -1,0 +1,122 @@
+{% extends "base.html" %}
+{% block title %}Campus Findr — Lost &amp; Found Feed{% endblock %}
+
+{% block content %}
+<!-- ====== Hero Section ====== -->
+<section class="text-center py-8 sm:py-12">
+    <h1 class="text-3xl sm:text-4xl font-bold text-gray-900">
+        Lost Something? Found Something?
+    </h1>
+    <p class="mt-2 text-gray-500 text-base sm:text-lg max-w-xl mx-auto">
+        Report, search, and reclaim misplaced items across campus — all in one place.
+    </p>
+</section>
+
+<!-- ====== Search & Filters ====== -->
+<section class="mb-6">
+    <div class="flex flex-col sm:flex-row gap-3">
+        <!-- Search Bar -->
+        <div class="relative flex-1">
+            <span class="absolute inset-y-0 left-3 flex items-center text-gray-400 text-lg">🔍</span>
+            <input
+                type="text"
+                id="searchInput"
+                placeholder="Search by title, description, or location…"
+                class="w-full pl-10 pr-4 py-2.5 border border-gray-300 rounded-lg text-sm
+                       focus:border-primary focus:ring-1 focus:ring-primary"
+            >
+        </div>
+
+        <!-- Filter Dropdowns -->
+        <div class="flex gap-2 filter-row overflow-x-auto">
+            <select id="filterType" class="border border-gray-300 rounded-lg px-3 py-2.5 text-sm bg-white min-w-[100px]">
+                <option value="">All Types</option>
+                <option value="lost">🔴 Lost</option>
+                <option value="found">🟢 Found</option>
+            </select>
+
+            <select id="filterStatus" class="border border-gray-300 rounded-lg px-3 py-2.5 text-sm bg-white min-w-[110px]">
+                <option value="">All Status</option>
+                <option value="open">Open</option>
+                <option value="claimed">Claimed</option>
+            </select>
+
+            <select id="filterCategory" class="border border-gray-300 rounded-lg px-3 py-2.5 text-sm bg-white min-w-[120px]">
+                <option value="">All Categories</option>
+                {% for val, label in categories %}
+                <option value="{{ val }}">{{ label }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+</section>
+
+<!-- ====== Item Card Grid ====== -->
+<section id="itemGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+    {% for item in items %}
+    <a href="{{ url_for('item_detail', item_id=item.id) }}"
+       class="item-card bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden flex flex-col hover:border-primary/30"
+       data-id="{{ item.id }}">
+
+        <!-- Thumbnail -->
+        {% if item.thumbnail_filename %}
+        <div class="h-44 bg-gray-100 overflow-hidden">
+            <img src="{{ url_for('static', filename='uploads/' + item.thumbnail_filename) }}"
+                 alt="{{ item.title }}"
+                 class="w-full h-full object-cover">
+        </div>
+        {% else %}
+        <div class="h-44 bg-gradient-to-br from-gray-100 to-gray-200 flex items-center justify-center">
+            <span class="text-5xl opacity-40">
+                {% if item.category == 'id_card' %}🪪
+                {% elif item.category == 'electronics' %}🎧
+                {% elif item.category == 'keys' %}🔑
+                {% elif item.category == 'books' %}📚
+                {% elif item.category == 'bottle' %}🧴
+                {% else %}📦{% endif %}
+            </span>
+        </div>
+        {% endif %}
+
+        <!-- Card Body -->
+        <div class="p-4 flex-1 flex flex-col">
+            <!-- Type & Status Badges -->
+            <div class="flex items-center gap-2 mb-2">
+                <span class="text-xs font-semibold px-2 py-0.5 rounded-full
+                    {% if item.item_type == 'lost' %}bg-red-100 text-red-700
+                    {% else %}bg-green-100 text-green-700{% endif %}">
+                    {{ item.item_type | upper }}
+                </span>
+                <span class="text-xs font-medium px-2 py-0.5 rounded-full
+                    {% if item.status == 'claimed' %}bg-gray-200 text-gray-600
+                    {% else %}bg-amber-100 text-amber-700 badge-open{% endif %}">
+                    {{ item.status | capitalize }}
+                </span>
+            </div>
+
+            <!-- Title -->
+            <h3 class="font-semibold text-gray-900 text-base leading-snug line-clamp-2">
+                {{ item.title }}
+            </h3>
+
+            <!-- Location -->
+            <p class="text-sm text-gray-500 mt-1 flex items-center gap-1">
+                <span>📍</span> {{ item.location }}
+            </p>
+
+            <!-- Date -->
+            <p class="text-xs text-gray-400 mt-auto pt-3">
+                {{ item.date_occurred.strftime('%d %b %Y') }}
+            </p>
+        </div>
+    </a>
+    {% endfor %}
+</section>
+
+<!-- Empty State (shown when no items match filters) -->
+<div id="emptyState" class="hidden text-center py-16">
+    <span class="text-6xl mb-4 block">🔎</span>
+    <h3 class="text-xl font-semibold text-gray-700">No items found</h3>
+    <p class="text-gray-500 mt-1">Try adjusting your search or filters.</p>
+</div>
+{% endblock %}

@@ -1,0 +1,74 @@
+/* custom.css — Minimal overrides on top of Tailwind CDN for Campus Findr */
+
+/* Smooth scroll for anchor links */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Custom focus ring for accessibility */
+input:focus,
+select:focus,
+textarea:focus {
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.35);
+}
+
+/* Card hover lift effect */
+.item-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.item-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+}
+
+/* Smooth expand/collapse for claim form */
+.claim-section {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.35s ease;
+}
+
+.claim-section.open {
+    max-height: 500px;
+}
+
+/* Badge pulse for status */
+.badge-open {
+    animation: pulse-badge 2s infinite;
+}
+
+@keyframes pulse-badge {
+    0%, 100% { opacity: 1; }
+    50%      { opacity: 0.7; }
+}
+
+/* Upload dropzone visual */
+.upload-area {
+    border: 2px dashed #cbd5e1;
+    transition: border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.upload-area:hover,
+.upload-area.dragover {
+    border-color: #3b82f6;
+    background-color: #eff6ff;
+}
+
+/* Hide scrollbar on filter row for horizontal scroll on mobile */
+.filter-row::-webkit-scrollbar {
+    display: none;
+}
+
+.filter-row {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+/* Image preview thumbnail in form */
+.img-preview {
+    max-height: 200px;
+    object-fit: contain;
+    border-radius: 0.5rem;
+}
