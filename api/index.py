@@ -1,16 +1,20 @@
 """
-api/index.py — Vercel serverless function entry point.
-
-Imports the Flask app from the parent directory and exposes it
-as a WSGI handler for Vercel's @vercel/python runtime.
+api/index.py — Vercel serverless entry point for Campus Findr.
 """
 
 import sys
 import os
 
-# Add the project root to Python path so we can import app, models, database
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), ".."))
+# Add project root to Python path
+PROJECT_ROOT = os.path.join(os.path.dirname(__file__), "..")
+sys.path.insert(0, PROJECT_ROOT)
+
+# Set Vercel env if not already set
+os.environ.setdefault("VERCEL", "1")
 
 from app import app
 
-# Vercel's @vercel/python runtime looks for the `app` variable
+# Vercel handler — this is what @vercel/python looks for
+def handler(request):
+    """WSGI handler for Vercel."""
+    return app(request.environ, request.start_response)
