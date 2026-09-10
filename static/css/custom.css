@@ -1,74 +1,222 @@
-/* custom.css — Minimal overrides on top of Tailwind CDN for Campus Findr */
+/* custom.css — Dark Glassmorphism Theme for Campus Findr */
 
-/* Smooth scroll for anchor links */
+/* ===== Base & Scrollbar ===== */
 html {
     scroll-behavior: smooth;
 }
 
-/* Custom focus ring for accessibility */
-input:focus,
-select:focus,
-textarea:focus {
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.35);
+body {
+    background: #0f172a;
+    background-image:
+        radial-gradient(ellipse at 20% 0%, rgba(139, 92, 246, 0.15) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 100%, rgba(6, 182, 212, 0.1) 0%, transparent 50%);
+    min-height: 100vh;
 }
 
-/* Card hover lift effect */
+::-webkit-scrollbar { width: 8px; }
+::-webkit-scrollbar-track { background: #1e293b; }
+::-webkit-scrollbar-thumb { background: #475569; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #64748b; }
+
+/* ===== Focus Rings ===== */
+input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: #8b5cf6 !important;
+    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.3), 0 0 20px rgba(139, 92, 246, 0.1);
+}
+
+/* ===== Glass Cards ===== */
+.glass {
+    background: rgba(30, 41, 59, 0.7);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    border: 1px solid rgba(148, 163, 184, 0.1);
+}
+
+.glass-light {
+    background: rgba(51, 65, 85, 0.5);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(148, 163, 184, 0.08);
+}
+
+/* ===== Item Cards ===== */
 .item-card {
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
 }
 
 .item-card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+    transform: translateY(-6px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4), 0 0 30px rgba(139, 92, 246, 0.1);
+    border-color: rgba(139, 92, 246, 0.3) !important;
 }
 
-/* Smooth expand/collapse for claim form */
+/* ===== Gradient Text ===== */
+.gradient-text {
+    background: linear-gradient(135deg, #c084fc, #22d3ee, #818cf8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* ===== Gradient Button ===== */
+.btn-gradient {
+    background: linear-gradient(135deg, #8b5cf6, #06b6d4);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-gradient:hover {
+    box-shadow: 0 8px 25px rgba(139, 92, 246, 0.4);
+    transform: translateY(-1px);
+}
+
+.btn-gradient::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, #06b6d4, #8b5cf6);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.btn-gradient:hover::after { opacity: 1; }
+.btn-gradient span { position: relative; z-index: 1; }
+
+/* ===== Animated Background Orbs ===== */
+.orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.4;
+    animation: float 8s ease-in-out infinite;
+    pointer-events: none;
+}
+
+.orb-1 {
+    width: 300px; height: 300px;
+    background: #8b5cf6;
+    top: -100px; left: -50px;
+    animation-delay: 0s;
+}
+
+.orb-2 {
+    width: 250px; height: 250px;
+    background: #06b6d4;
+    top: -50px; right: -30px;
+    animation-delay: -3s;
+}
+
+.orb-3 {
+    width: 200px; height: 200px;
+    background: #ec4899;
+    bottom: -80px; left: 50%;
+    animation-delay: -5s;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0) scale(1); }
+    50%      { transform: translateY(-30px) scale(1.05); }
+}
+
+/* ===== Claim Section ===== */
 .claim-section {
     max-height: 0;
     overflow: hidden;
-    transition: max-height 0.35s ease;
+    transition: max-height 0.4s ease;
 }
 
 .claim-section.open {
-    max-height: 500px;
+    max-height: 600px;
 }
 
-/* Badge pulse for status */
+/* ===== Badge Pulse ===== */
 .badge-open {
-    animation: pulse-badge 2s infinite;
+    animation: pulse-badge 2.5s ease-in-out infinite;
 }
 
 @keyframes pulse-badge {
-    0%, 100% { opacity: 1; }
-    50%      { opacity: 0.7; }
+    0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(251, 191, 36, 0.3); }
+    50%      { opacity: 0.85; box-shadow: 0 0 12px 2px rgba(251, 191, 36, 0.2); }
 }
 
-/* Upload dropzone visual */
+/* ===== Upload Dropzone ===== */
 .upload-area {
-    border: 2px dashed #cbd5e1;
-    transition: border-color 0.2s ease, background-color 0.2s ease;
+    border: 2px dashed rgba(148, 163, 184, 0.3);
+    transition: all 0.3s ease;
+    background: rgba(30, 41, 59, 0.5);
 }
 
-.upload-area:hover,
-.upload-area.dragover {
-    border-color: #3b82f6;
-    background-color: #eff6ff;
+.upload-area:hover, .upload-area.dragover {
+    border-color: #8b5cf6;
+    background: rgba(139, 92, 246, 0.1);
 }
 
-/* Hide scrollbar on filter row for horizontal scroll on mobile */
-.filter-row::-webkit-scrollbar {
-    display: none;
-}
-
-.filter-row {
-    -ms-overflow-style: none;
-    scrollbar-width: none;
-}
-
-/* Image preview thumbnail in form */
 .img-preview {
     max-height: 200px;
     object-fit: contain;
     border-radius: 0.5rem;
+}
+
+/* ===== Filter Row ===== */
+.filter-row::-webkit-scrollbar { display: none; }
+.filter-row { -ms-overflow-style: none; scrollbar-width: none; }
+
+/* ===== Stat Cards ===== */
+.stat-card {
+    transition: transform 0.3s ease;
+}
+
+.stat-card:hover {
+    transform: scale(1.05);
+}
+
+/* ===== Hero Typing Cursor ===== */
+.cursor-blink::after {
+    content: '|';
+    animation: blink 1s step-end infinite;
+    color: #8b5cf6;
+}
+
+@keyframes blink {
+    0%, 100% { opacity: 1; }
+    50%      { opacity: 0; }
+}
+
+/* ===== Nav Glass ===== */
+.nav-glass {
+    background: rgba(15, 23, 42, 0.8);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 1px solid rgba(148, 163, 184, 0.1);
+}
+
+/* ===== Smooth Entrance Animation ===== */
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+.animate-in {
+    animation: fadeInUp 0.5s ease-out forwards;
+    opacity: 0;
+}
+
+.delay-1 { animation-delay: 0.1s; }
+.delay-2 { animation-delay: 0.2s; }
+.delay-3 { animation-delay: 0.3s; }
+.delay-4 { animation-delay: 0.4s; }
+.delay-5 { animation-delay: 0.5s; }
+.delay-6 { animation-delay: 0.6s; }
+
+/* ===== Select dropdown styling ===== */
+select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%2394a3b8' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10l-5 5z'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    padding-right: 32px !important;
 }
